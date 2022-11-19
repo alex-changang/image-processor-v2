@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="image-processing-part2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/hw6/res/image-processing-part2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,27 @@
+load hw5/res/link.ppm link
+load hw5/res/testImage.png test
+vertical-flip link link-vertical
+horizontal-flip link link-horizontal
+red-component link link-red-comp
+green-component link link-green-comp
+blue-component link link-blue-comp
+value-component link link-value-comp
+intensity-component link link-intensity-comp
+luma-component link link-luma-comp
+luma-component test test-luma-comp
+brighten 10 link link-bright
+brighten -10 link link-dark
+blur test test-blurred
+sharpen test test-sharpened
+grey-ct link link-grey
+grey-ct test test-grey
+sepia test test-sepia
+save link-vertical.ppm link-vertical
+save link-horizontal.png link-vertical
+save link-luma-comp.bmp link-luma-comp
+save link-grey.jpg link-grey
+save test-grey.jpg test-grey
+save test-blur.png test-blurred
+save test-sharpened.png test-sharpened
+save test-sepia.bmp test-sepia
+q
