@@ -1,9 +1,10 @@
 package view;
 
+import controller.IImageController;
 import model.CommandCategory;
 import model.CommandModel;
+import model.Image;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.stream.Collectors;
  */
 public class SimpleImageView implements IImageView {
   private final Appendable out;
+
+  private IImageController controller;
 
   /**
    * The default constructor for a SimpleImageView.
@@ -37,7 +40,9 @@ public class SimpleImageView implements IImageView {
     this(System.out);
   }
 
-  public void initialize(Map<CommandCategory, List<CommandModel>> commands) {
+  public void initialize(Map<CommandCategory, List<CommandModel>> commands, IImageController controller) {
+    this.controller = controller;
+
     // todo: make this
     try {
       this.out.append("Available commands:\n");
@@ -51,7 +56,7 @@ public class SimpleImageView implements IImageView {
                 .sorted(Comparator.comparingInt(CommandModel::getSortOrder))
                 .collect(Collectors.toList());
         for (CommandModel command : sortedCommandList) {
-          this.out.append("  " + command.getCommandName() + ": " + command.getCommandHelp());
+          this.out.append("  " + command.getDisplayName() + ": " + command.getCommandHelp());
           this.out.append("\n");
         }
       }
@@ -61,8 +66,18 @@ public class SimpleImageView implements IImageView {
   }
 
   @Override
+  public void addListener(IImageController controller) {
+
+  }
+
+  @Override
   public void renderMessage(String message) throws IOException {
     this.out.append(message);
   }
 
+  @Override
+  public void displayImage(Image image) {
+    //no-op
+
+  }
 }

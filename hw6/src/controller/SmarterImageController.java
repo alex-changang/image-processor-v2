@@ -73,9 +73,6 @@ public class SmarterImageController extends AbstractImageController implements I
             "Save an image: save image-path image-name",
             fileCommands.size() + 1,
             "hw6/src/view/icons/save_icon-01.png"));
-
-    this.welcomeMessage();
-    this.view.initialize(commandMap);
   }
 
   /**
@@ -99,6 +96,11 @@ public class SmarterImageController extends AbstractImageController implements I
 
   @Override
   public void executeFilter() {
+
+    this.welcomeMessage();
+    this.view.initialize(commandMap, this);
+//    this.view.addListener(this);
+
     // scan the readable instructions into array of strings (inputs)
     Scanner s = new Scanner(this.instructions);
     ArrayList<String> inputs;
@@ -136,6 +138,16 @@ public class SmarterImageController extends AbstractImageController implements I
       } else {
         this.executeHelper(inputs);
       }
+    }
+  }
+
+  @Override
+  public void executeCommand(String command, ArrayList<String> arguments) {
+    try {
+      this.view.renderMessage(command + " called!");
+      this.executeHelper(arguments);
+    } catch (IOException ioe) {
+      System.err.println(ioe);
     }
   }
 

@@ -2,6 +2,8 @@ package controller;
 
 import model.Image;
 
+import java.util.ArrayList;
+
 /**
  * Represents the operations of a controller.
  */
@@ -15,4 +17,5 @@ public interface IImageController {
 
   Image getImage(String name) throws IllegalArgumentException;
 
+  void executeCommand(String command, ArrayList<String> arguments);
 }

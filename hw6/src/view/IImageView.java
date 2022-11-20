@@ -1,7 +1,10 @@
 package view;
 
+import controller.IFeaturesController;
+import controller.IImageController;
 import model.CommandCategory;
 import model.CommandModel;
+import model.Image;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,7 +18,7 @@ public interface IImageView {
   /**
    *
    */
-  void initialize(Map<CommandCategory, List<CommandModel>> commands);
+  void initialize(Map<CommandCategory, List<CommandModel>> commands, IImageController controller);
 
   /**
    * Renders a message in the view.
@@ -25,4 +28,7 @@ public interface IImageView {
    */
   void renderMessage(String message) throws IOException;
 
+  void addListener(IImageController controller);
+
+  void displayImage(Image image);
 }

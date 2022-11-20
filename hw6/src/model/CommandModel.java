@@ -5,7 +5,7 @@ public class CommandModel {
 
   private String command;
 
-  private String commandName;
+  private String displayName;
 
   private String commandHelp;
 
@@ -15,9 +15,9 @@ public class CommandModel {
   // Optional
   private String imagePath;
 
-  public CommandModel(String command, String commandName, String commandHelp, int sortOrder, String imagePath) {
+  public CommandModel(String command, String displayName, String commandHelp, int sortOrder, String imagePath) {
     this.command = command;
-    this.commandName = commandName;
+    this.displayName = displayName;
     this.commandHelp = commandHelp;
     this.sortOrder = sortOrder;
     this.imagePath = imagePath;
@@ -31,8 +31,8 @@ public class CommandModel {
     return command;
   }
 
-  public String getCommandName() {
-    return commandName;
+  public String getDisplayName() {
+    return displayName;
   }
 
   public String getCommandHelp() {

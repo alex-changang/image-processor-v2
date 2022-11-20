@@ -280,6 +280,7 @@ public abstract class AbstractImageController implements IImageController {
     else {
       this.images.put(name, image);
     }
+    this.view.displayImage(image);
   }
 
   @Override

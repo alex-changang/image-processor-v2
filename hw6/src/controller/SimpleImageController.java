@@ -42,10 +42,6 @@ public class SimpleImageController extends AbstractImageController implements II
             "save image-path image-name",
             fileCommands.size() + 1, "hw6/src/view/icons/save_icon-01.png"));
 
-    // Not sure if this should be the controller's job, but it's OK coz it's delegating it
-    // to the view to render.
-    this.welcomeMessage();
-    this.view.initialize(commandMap);
   }
 
   /**
@@ -66,6 +62,11 @@ public class SimpleImageController extends AbstractImageController implements II
   @Override
   public void executeFilter() throws IllegalStateException {
 
+    // Not sure if this should be the controller's job, but it's OK coz it's delegating it
+    // to the view to render.
+    this.welcomeMessage();
+    this.view.initialize(commandMap, this);
+
     // I'm also not sure if the controller should be reading the user's input.
     // In this assignment, we are using commandLine, so you kinda have a "CommandLine-based Controller",
     // but on the other hand, is it the View's job to know what the user interface is?
@@ -82,4 +83,8 @@ public class SimpleImageController extends AbstractImageController implements II
     }
   }
 
+  @Override
+  public void executeCommand(String command, ArrayList<String> arguments) {
+
+  }
 }

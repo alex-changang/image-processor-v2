@@ -1,62 +1,88 @@
 package view;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import controller.GUIController;
-import controller.IFeaturesController;
+import controller.IImageController;
 import model.CommandCategory;
 import model.CommandModel;
-import model.Pixel;
+import model.Image;
+import view.listener.BaseActionListener;
 
 
 public class GUIView extends JFrame implements IImageView {
 
   private JMenuBar mb;
   private JScrollPane imageViewer;
+  private JLabel imageLabel;
   private JPanel histogramViewer;
   private JSplitPane splitPane;
   private Map<String, JMenuItem> menuItems;
+
+  private IImageController controller;
 
   public GUIView() {
     super();
     this.menuItems = new HashMap<>();
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     setMinimumSize(new Dimension(1024, 768));
-    // todo: add the image to display in the imageViewer constructor
 
     this.histogramViewer = new JPanel();
     histogramViewer.setPreferredSize(new Dimension(400, 700));
+
+    this.imageLabel = new JLabel();
+    this.imageLabel.setHorizontalAlignment(JLabel.CENTER);
+
+    this.imageViewer = new JScrollPane(this.imageLabel);
+    imageViewer.setPreferredSize(new Dimension(600, 700));
 
     this.splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
             imageViewer, histogramViewer);
     this.splitPane.setOneTouchExpandable(true);
     this.splitPane.setDividerLocation(512);
+
+    //Provide minimum sizes for the two components in the split pane
+    Dimension minimumSize = new Dimension(100, 50);
+    imageViewer.setMinimumSize(minimumSize);
+    histogramViewer.setMinimumSize(minimumSize);
   }
 
   @Override
-  public void initialize(Map<CommandCategory, List<CommandModel>> commands) {
+  public void initialize(Map<CommandCategory, List<CommandModel>> commands,
+                         IImageController controller) {
+    this.controller = controller;
+
     // todo: make this
     this.addPanels();
     this.buildMenu(commands);
-    this.displayImage(new ImageIcon());
-    this.add(histogramViewer);
-    this.add(imageViewer);
+    try {
+      // TODO: Remove - this is just a test
+      BufferedImage img = ImageIO.read(new File("/Users/alexchan/Downloads/IMG_0022.jpg"));
+
+      ImageIcon icon = new ImageIcon(img);
+      this.imageLabel.setIcon(icon);
+    } catch(IOException ioException) {
+      //
+    }
     this.add(splitPane);
-    setVisible(true);
+    this.setVisible(true);
   }
 
-  public void addListeners(IFeaturesController controller) {
+  @Override
+  public void addListener(IImageController controller) {
+    ArrayList<String> arguments = new ArrayList<>();
     for (String name : this.menuItems.keySet()) {
-      this.menuItems.get(name).addActionListener(evt -> controller.executeFilter(name));
+      this.menuItems.get(name).addActionListener(evt -> controller.executeCommand(name, arguments));
     }
   }
 
@@ -65,6 +91,7 @@ public class GUIView extends JFrame implements IImageView {
 
   private void buildMenu(Map<CommandCategory, List<CommandModel>> commands) {
     this.mb = new JMenuBar();
+    BaseActionListener actionListener = new BaseActionListener(this.controller);
 
     List<CommandCategory> sortedCategories = commands.keySet().stream()
             .sorted(Comparator.comparingInt(CommandCategory::getSortOrder))
@@ -80,11 +107,13 @@ public class GUIView extends JFrame implements IImageView {
         JMenuItem cmd;
         if (command.getImagePath() != null) {
           icon = new ImageIcon(command.getImagePath(), command.getCommandHelp());
-          cmd = new JMenuItem(command.getCommandName(), icon);
+          cmd = new JMenuItem(command.getDisplayName(), icon);
         }
         else {
-          cmd = new JMenuItem(command.getCommandName());
+          cmd = new JMenuItem(command.getDisplayName());
         }
+        cmd.setActionCommand(command.getCommand());
+        cmd.addActionListener(actionListener);
         this.menuItems.put(command.getCommand(), cmd);
         menu.add(cmd);
       }
@@ -162,11 +191,12 @@ public class GUIView extends JFrame implements IImageView {
   }
 
 
-//  @Override
-  public void displayImage(ImageIcon imageIcon) {
-    JLabel imageLabel = new JLabel(imageIcon);
-    this.imageViewer = new JScrollPane(imageLabel);
-    imageViewer.setPreferredSize(new Dimension(600, 700));
+  @Override
+  public void displayImage(Image image) {
+    BufferedImage img = image.makeBufferedImage();
+
+    ImageIcon imageIcon = new ImageIcon(img);
+    this.imageLabel.setIcon(imageIcon);
   }
 
 
